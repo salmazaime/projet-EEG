@@ -1,95 +1,130 @@
-------------
-CL-Drive
-------------
+# Projet Exploitation du dataset CL-Drive
 
-CL-Drive is a driver's cognitive load assessment dataset that contains physiological signals Electroencephalogram (EEG), Electrocardiography (ECG) and Electrodermal Activity (EDA) along with the eye-traking data. We have collected the EEG data using Muse S headband with 4 channels, ECG and EDA data are collected using the shimmers and Tobii is used to collect the Gaze data. The data is collected from 21 participants suring driving in an immersive simulated vehicle. The participants drove in 9 different complexity levels for 3 minutes each which helped induced different cognitive load among the participants. Please view our paper "Multimodal Brain-Computer Interface for In-Vehicle Driver Cognitive Load Measurement" for more details.
+## Estimation de la charge cognitive du conducteur à partir des signaux EEG
 
-----------------
-DATA STRUCTURE
-----------------
+### Contexte
 
-CL-Drive
-    |----EEG 
-         |----participant_ID_1
-                      |----eeg_data_level_1
-                      |----eeg_baseline_level_1
-                      .
-                      .
-                      .
-                      |----eeg_data_level_9
-                      |----eeg_baseline_level_9
-         .
-         .
-         .
-         |----participant_ID_21
-    |----ECG
-    |----EDA
-    |----Gaze
-    |----Labels
+Ce projet s'inscrit dans la continuité des travaux réalisés dans les TD1, TD2, TD3 et TD4 autour du dataset **CL-Drive**.
 
+Les séances précédentes ont permis d'étudier :
 
-----------------------
-DATA DESCRIPTION
-----------------------
+* le protocole expérimental du dataset CL-Drive ;
+* la compréhension de l'article scientifique associé ;
+* la segmentation des signaux en fenêtres temporelles de 10 secondes ;
+* le prétraitement des signaux EEG ;
+* l'extraction des caractéristiques (features) EEG.
 
-./                  : Root folder (contains all the raw data)
-./EEG               : EEG data from all the participants
-./ECG               : ECG data from all the participants
-./EDA               : EDA data from all the participants
-./Gaze              : Gaze data from all the participants
-./Labels            : Labels data from all the participants
+À l'issue du TD4, un ensemble de fichiers de caractéristiques EEG a été généré dans le dossier :
 
----------------------------------------------------------------------------------------------------------------------------
+```text
+EEG_Features_10s/
+```
 
-./EEG/1030          : EEG data and baseline for all 9 complexity levels from participants 1 
-./EEG/1105          : EEG data and baseline for all 9 complexity levels from participants 2
+Ce projet ne traite plus l'extraction des features. Il exploite directement les caractéristiques déjà calculées afin de construire un pipeline complet d'apprentissage automatique pour l'estimation de la charge cognitive du conducteur.
+
+---
+
+## Objectif
+
+L'objectif est de développer un pipeline supervisé permettant de prédire le niveau de charge cognitive à partir des signaux EEG.
+
+Le pipeline suivi est le suivant :
+
+```text
+EEG_Features_10s
+        │
+        ▼
+Normalisation des features
+        │
+        ▼
+Normalized_Features_10s/EEG
+        │
+        ▼
+Ajout des niveaux et labels
+        │
+        ▼
+Normalized_Features_10s_With_Label/EEG
+        │
+        ▼
+Construction du dataset supervisé
+        │
+        ▼
+Entraînement des modèles de classification
+        │
+        ▼
+Évaluation des performances
+        │
+        ▼
+Interprétation des résultats
+```
+
+---
+
+## Structure du projet
+
+```text
 .
-.
-.
-./EEG/1953          : EEG data and baseline for all 9 complexity levels from participants 21
+├── TP.ipynb
+├── TD4.ipynb
+├── README.md
+├── Data/
+│   ├── EEG/
+│   ├── Labels/
+│   └── EEG_Features_10s/
+│
+├── Normalized_Features_10s/
+│   └── EEG/
+│
+└── Normalized_Features_10s_With_Label/
+    └── EEG/
+```
 
----------------------------------------------------------------------------------------------------------------------------
+---
 
-./ECG/1030          : ECG data and baseline for all 9 complexity levels from participants 1 
-./ECG/1105          : ECG data and baseline for all 9 complexity levels from participants 2
-.
-.
-.
-./ECG/1953          : ECG data and baseline for all 9 complexity levels from participants 21
+## Méthodologie
 
----------------------------------------------------------------------------------------------------------------------------
+Les principales étapes réalisées sont :
 
-./EDA/1030          : EDA data and baseline for all 9 complexity levels from participants 1 
-./EDA/1105          : EDA data and baseline for all 9 complexity levels from participants 2
-.
-.
-.
-./EDA/1953          : EDA data and baseline for all 9 complexity levels from participants 21
+1. Chargement des fichiers de features EEG.
+2. Normalisation des variables numériques.
+3. Association des niveaux de charge cognitive.
+4. Création des labels supervisés.
+5. Construction du dataset d'apprentissage.
+6. Séparation des données d'entraînement et de test.
+7. Entraînement de modèles de classification.
+8. Évaluation des performances à l'aide de métriques adaptées.
+9. Analyse et interprétation des résultats obtenus.
 
----------------------------------------------------------------------------------------------------------------------------
+---
 
-./Gaze/1030         : Gaze data and baseline for all 9 complexity levels from participants 1 
-./Gaze/1105         : Gaze data and baseline for all 9 complexity levels from participants 2
-.
-.
-.
-./Gaze/1953         : Gaze data and baseline for all 9 complexity levels from participants 21
+## Technologies utilisées
 
----------------------------------------------------------------------------------------------------------------------------
+* Python 3
+* Jupyter Notebook
+* Pandas
+* NumPy
+* Scikit-learn
+* Matplotlib
+* Seaborn
 
-./Labels/1030       : Subjective cognitive load scores every 10 seconds for all 9 complexity levels from participant 1
-./Labels/1105       : Subjective cognitive load scores every 10 seconds for all 9 complexity levels from participant 2
-.
-.
-.
-./Labels/1953       : Subjective cognitive load scores every 10 seconds for all 9 complexity levels from participant 21
+---
 
--------------------------------------------------------------------------------
+## Données
 
+Le dataset CL-Drive n'est pas inclus dans ce dépôt GitHub en raison de sa taille importante.
 
+Pour exécuter le projet, les données doivent être placées dans la structure de dossiers attendue décrite dans le sujet du TP.
 
+---
 
+## Résultat attendu
 
+À la fin du projet, le système doit être capable d'estimer automatiquement le niveau de charge cognitive du conducteur à partir des caractéristiques EEG extraites du dataset CL-Drive.
 
+---
 
+## Auteurs 
 
+Salma Zaime et Omar El Mojahid
+
+Projet réalisé dans le cadre du module d'Interfaces Cerveau-Machine.
